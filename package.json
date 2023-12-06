@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "angular-ts-math": "^2.0.1",
+    "firebase-functions": "^4.4.1"
+  }
+}

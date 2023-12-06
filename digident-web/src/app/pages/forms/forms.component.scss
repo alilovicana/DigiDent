@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.form-card {
+  min-width: 400px;
+  margin-right: 40px;
+  margin-bottom: 40px;
+}
+
+.stats-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 8px;
+}
+
+.highlighted {
+  justify-self: flex-end;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #1fc9f2;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.main-button {
+  flex-grow: 1;
+}
+
+.secondary-button {
+  max-width: 48px;
+  min-width: 48px;
+  padding: 0px;
+  margin-left: 8px;
+}
+
+.add-form {
+  width: 214px;
+  height: 214px;
+}
+
+.add-form-icon {
+  width: 60px;
+  height: 60px;
+  font-size: 60px;
+}
+
+.add-form-text {
+  font-size: 24px;
+  font-weight: 800;
+}

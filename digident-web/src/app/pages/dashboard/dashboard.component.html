@@ -1,0 +1,40 @@
+<mat-sidenav-container class="sidenav-container" >
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [mode]="'side'"  >
+    <mat-toolbar style="border: 1px solid lightgray;"><div class="logo"></div></mat-toolbar>
+    <mat-divider></mat-divider>
+    <mat-nav-list (click)="drawer.mode == 'over' ? drawer.toggle() : undefined">
+      <a mat-list-item routerLink="/dashboard/forms"><mat-icon mat-list-icon style="margin-right: 4px;">fact_check</mat-icon>Manage Forms</a>
+
+      <div class="menu-form-container" mat-list-item *ngFor="let form of forms | async" [ngClass]="{'menu-form-active' : formId == form.id}">
+        <div class="menu-form-text">{{form.name}}</div>
+          <button mat-raised-button color="primary" [routerLink]="'/dashboard/form-edit/' + form.id"><mat-icon mat-list-icon>edit</mat-icon></button>
+          <button mat-raised-button color="primary" [routerLink]="'/dashboard/form-stats/' + form.id"><mat-icon mat-list-icon>bar_chart</mat-icon></button>
+      </div>
+
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="navbar">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon" class="menu-button">menu</mat-icon>
+      </button>
+      <div></div>
+      <div class="lenta"></div>
+      <div class="lenta2"></div>
+
+
+      <div class="logo"></div>
+    </mat-toolbar>
+
+    <div class="content">
+        <router-outlet #outlet="outlet"></router-outlet>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

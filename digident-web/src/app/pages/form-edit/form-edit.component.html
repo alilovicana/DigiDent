@@ -1,0 +1,118 @@
+<div class="container-top">
+    <mat-card *ngIf="form">
+        <mat-card-title>Form data</mat-card-title>
+        <mat-form-field appearance="outline" class="fullwidth">
+          <mat-label>Form Name</mat-label>
+          <input matInput [(ngModel)]="form.name">
+        </mat-form-field>
+
+        <div class="stats-grid">
+            <h3>Status:</h3>
+            <h3 class="highlighted">{{form.status}}</h3>
+        </div>
+
+        <div class="buttons-grid">
+          <button mat-raised-button color="primary" class="fullwidth" (click)="publish()" [disabled]="form.status != 'editing'">Publish Form</button>
+          <button mat-raised-button color="primary" class="fullwidth" (click)="close()" [disabled]="form.status != 'open'">Close Form</button>
+          <button mat-raised-button color="primary" style="grid-column: 1 / span 2;" (click)="save()">Save Changes<mat-icon style="margin-left: 20px;">save</mat-icon></button>
+      </div>
+      </mat-card>
+
+
+
+      <mat-card>
+        <mat-card-title>Compliance</mat-card-title>
+        <mat-form-field appearance="outline" class="fullwidth">
+            <ngx-mat-file-input [(ngModel)]="file" [multiple]="false" [disabled]="form.status != 'editing'" [accept]="'application/pdf'" (ngModelChange)="upload($event)"></ngx-mat-file-input>
+        </mat-form-field>
+        <div class="stats-grid">
+            <h3>Url:</h3>
+            <a href="form.compliance">{{form.compliance ? form.compliance : 'NOT UPLOADED'}}</a>
+        </div>
+      </mat-card>
+
+
+</div>
+
+
+
+<div class="steps-container" cdkDropListGroup *ngIf="form">
+
+  <div class="step-container column" *ngFor="let step of steps; index as i;">
+    <mat-card class="step">
+      <mat-icon *ngIf="form.status == 'editing'">drag_indicator_white</mat-icon>
+      <h3 style="margin-bottom: 0px;">Step #{{i+1}}</h3>
+      <mat-icon (click)="removeStep(i)" *ngIf="form.status == 'editing'">delete_white</mat-icon>
+    </mat-card>
+
+    <div class="column"  cdkDropList [cdkDropListData]="step" (cdkDropListDropped)="drop($event)">
+
+      <mat-card class="field" *ngFor="let field of step; index as j;" cdkDrag>
+        <div class="field-header">
+          <mat-icon cdkDragHandle style="color: #1FC9F2;" *ngIf="form.status == 'editing'">drag_indicator_white</mat-icon>
+          <h3 style="margin-bottom: 0px;">Question #{{field.number + 1}}</h3>
+          <mat-checkbox [(ngModel)]="field.required" *ngIf="field.type" [disabled]="form.status != 'editing'">Required</mat-checkbox>
+          <mat-icon style="color: lightgray" (click)="removeField(i, j)" *ngIf="form.status == 'editing'">delete_white</mat-icon>
+        </div>
+
+        <mat-form-field appearance="outline" class="fullwidth"  >
+          <mat-label>Type of input</mat-label>
+          <mat-select [value]="field.type" (valueChange)="field.type = $event" [disabled]="form.status != 'editing'">
+
+            <mat-option [value]="'text'">Text field</mat-option>
+            <mat-option [value]="'textarea'">Text Area</mat-option>
+            <mat-option [value]="'dropdown'">Dropdown</mat-option>
+            <mat-option [value]="'radio'">Radio buttons</mat-option>
+            <mat-option [value]="'check'">Checkbox</mat-option>
+            <mat-option [value]="'range'">Range</mat-option>
+
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="fullwidth" *ngIf="field.type">
+          <mat-label>Label</mat-label>
+          <input matInput placeholder="label" [(ngModel)]="field.label" [disabled]="form.status != 'editing'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="fullwidth" *ngIf="field.type">
+          <mat-label>Placeholder</mat-label>
+          <input matInput placeholder="Ex. Pizza" value="Sushi" [(ngModel)]="field.placeholder" [disabled]="form.status != 'editing'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="fullwidth" *ngIf="field.type">
+          <mat-label>Description</mat-label>
+          <input matInput placeholder="Ex. Pizza" value="Sushi" [(ngModel)]="field.description" [disabled]="form.status != 'editing'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="fullwidth" *ngIf="field.type && (field.type == 'radio' || field.type == 'dropdown' || field.type == 'multiple' || field.type == 'range')">
+            <mat-label>Options</mat-label>
+            <input matInput placeholder="Ex. Pizza" value="Sushi" [(ngModel)]="field.options" [disabled]="form.status != 'editing'">
+            <mat-hint>Comma seperated, ordered</mat-hint>
+        </mat-form-field>
+
+        <mat-checkbox [(ngModel)]="field.custom" *ngIf="field.type && field.type == 'dropdown'" [disabled]="form.status != 'editing'">Allow Custom Input</mat-checkbox>
+
+        <div class="drag-placeholder" *cdkDragPlaceholder></div>
+      </mat-card>
+
+    </div>
+
+    <mat-card class="add-field" (click)="addField(i)" *ngIf="form.status == 'editing'">
+      <div></div>
+      <h3 style="margin-bottom: 0px;">Add Field</h3>
+      <mat-icon>add_white</mat-icon>
+    </mat-card>    
+  </div>
+
+
+  <mat-card class="add-step" (click)="addStep()" *ngIf="form.status == 'editing'">
+    <div></div>
+    <h3 style="margin-bottom: 0px; white-space: nowrap;">Add Step</h3>
+    <mat-icon>add_white</mat-icon>
+  </mat-card>
+  <mat-card  [ngClass]="{ 'add-boxBreathing': !disable, 'disabled-card': disable }" (click)="toggleBoxBreathing()"  *ngIf="form.status == 'editing'">
+    <div></div>
+    <h3 style="margin-bottom: 0px; white-space: nowrap;">Add Box Breathing</h3>
+  </mat-card>
+</div>
+

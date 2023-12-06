@@ -1,0 +1,62 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 40px;
+  grid-row-gap: 40px;
+}
+
+.form-card {
+  max-width: 300px;
+}
+
+.stats-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 8px;
+}
+
+.highlighted {
+  justify-self: flex-end;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #1fc9f2;
+}
+
+.bar {
+  fill: #1fc9f2 !important;
+}
+
+.correlation-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.correlation-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.correlation-entry {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  border: 1px solid gray;
+}
+
+mat-card-title {
+  margin-bottom: 20px;
+}
+
+td {
+  min-width: 100px;
+  text-align: center;
+}

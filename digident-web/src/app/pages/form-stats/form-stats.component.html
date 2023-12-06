@@ -1,0 +1,69 @@
+<div class="container">
+
+      <mat-card style="grid-column: 1 / span 2;">
+        <mat-card-title>Question Analytics <button mat-raised-button color="primary" style="float: right;" (click)="exportBarChartAsCSV()">Export .CSV <mat-icon style="margin-left: 20px;">file_download</mat-icon></button></mat-card-title>
+        <mat-form-field appearance="outline">
+          <mat-label>Question #:</mat-label>
+          <mat-select [(ngModel)]="selectedQuestion" (ngModelChange)="updateTable($event)">
+            <mat-option [value]="i" *ngFor="let question of questions; index as i">#{{i}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <canvas baseChart *ngIf="questionAnalyzeable"
+          [datasets]="barChartData"
+          [labels]="barChartLabels"
+          [options]="barChartOptions"
+          [legend]="false"
+          [chartType]="'bar'">
+        </canvas>
+        <p *ngIf="!questionAnalyzeable">Question type cannot be displayed as a bar chart</p>
+      </mat-card>
+
+      <mat-card *ngIf="correlations" style="grid-column: 3 / span 2;">
+        <mat-card-title>Correlation Matrix <button mat-raised-button color="primary" style="float: right;" (click)="exportCorrelationMatrixAsCSV()">Export .CSV <mat-icon style="margin-left: 20px;">file_download</mat-icon></button></mat-card-title>
+        <div class="correlation-column">
+            <div class="correlation-row">
+                <div class="correlation-entry"></div>
+                <div class="correlation-row" *ngFor="let column of correlations; index as i">
+                    <div class="correlation-entry">#{{i + 1}}</div>
+                </div>
+            </div>
+          <div class="correlation-row" *ngFor="let column of correlations; index as i">
+            <div class="correlation-entry">#{{i + 1}}</div>
+          <div class="correlation-entry" *ngFor="let row of column" style="background-color: {{$correlation.mapCorrelationToColor(row)}};">{{row != 'NaN' ? row : ' '}}</div>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card style="margin-top: 40px;" style="grid-column: 1 / span 4;">
+        <mat-card-title>Submissions Table <button mat-raised-button color="primary" style="float: right;" (click)="exportDataTableAsCSV()">Export .CSV <mat-icon style="margin-left: 20px;">file_download</mat-icon></button></mat-card-title>
+        <mat-form-field appearance="outline">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+          </mat-form-field>
+
+          <div style="overflow-x: scroll;">
+              <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+
+                  <!-- ID Column -->
+                  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns; index as j">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{column}}</th>
+                    <td mat-cell *matCellDef="let row; index as i"> {{row[column]}}
+                    <mat-icon *ngIf="column == 'Edit'" (click)="edit(row)">edit</mat-icon>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                  <!-- Row shown when there is no matching data. -->
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                  </tr>
+                </table>
+
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+          </div>
+
+    </mat-card>
+
+</div>

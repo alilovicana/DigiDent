@@ -1,0 +1,531 @@
+<div class="header">
+  <div class="logo"></div>
+  <div>Form Submission</div>
+</div>
+<div class="container" *ngIf="form">
+  <div class="content">
+    <mat-card class="fullwidth">
+      <mat-card-title>{{ form.name }}</mat-card-title>
+      <h3>Questionare #{{ submissionId }}</h3>
+      <mat-divider></mat-divider>
+
+      <ng-container *ngIf="currentStep == 0">
+        <div
+          class="padded"
+          style="display: flex; flex-direction: column; align-items: center"
+        >
+          <h1 class="thankyou">Welcome!</h1>
+          <p style="text-align: center">
+            To the Digident form: {{ form.name }}
+          </p>
+          <p style="text-align: center">
+            Before filling out the form, please acknowledge that you have read,
+            understood and accept the compliance for the form:
+          </p>
+          <mat-checkbox
+            [(ngModel)]="complied"
+            (ngModelChange)="valid = complied"
+            >I have read and i accept the
+            <a [href]="form.compliance">Compliance</a></mat-checkbox
+          >
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="currentStep == 1">
+        <mat-card class="smartwatch-plugin">
+          <div class="smartwatch-plugin-title">SMARTWATCH BIOMETRICS</div>
+          <mat-form-field appearance="outline" class="fullwidth">
+            <mat-label>Smartwatch Number</mat-label>
+            <mat-select [(ngModel)]="selectedSmartwatch">
+              <mat-option
+                [value]="smartwatch.id"
+                *ngFor="let smartwatch of $smartwatch.smartwatches$ | async"
+              >
+                {{ smartwatch.name }}</mat-option
+              >
+            </mat-select>
+            <mat-hint>Choose the smartwatch you're wearing</mat-hint>
+          </mat-form-field>
+          <mat-spinner
+            class="smartwatch-plugin-loader"
+            *ngIf="measuring"
+          ></mat-spinner>
+          <p style="text-align: center; margin-bottom: 0px" *ngIf="measuring">
+            Measuring...
+          </p>
+          <p style="text-align: center" *ngIf="measuring">
+            Please ask your attending surveyor to configure your measuring
+            device and continue filling out the form
+          </p>
+          <button
+            mat-raised-button
+            color="primary"
+            class="smartwatch-plugin-button"
+            (click)="measuring = true; valid = true"
+            [disabled]="measuring"
+            *ngIf="selectedSmartwatch"
+          >
+            START MEASUREMENT
+          </button>
+        </mat-card>
+      </ng-container>
+
+      <ng-container *ngIf="currentStep == 7 && isBoxBreathing">
+        <div
+          class="padded"
+          style="display: flex; flex-direction: column; align-items: center"
+        >
+          <button
+            class="mat-focus-indicator fullwidth mat-raised-button mat-button-base mat-primary ng-star-inserted"
+            (click)="AudioTimer5()"
+          >
+            NASTAVITE
+          </button>
+
+          <h1 class="thankyou" *ngIf="textOpacity5" style="padding-top: 20px">
+            Hvala na odgovorima!
+          </h1>
+
+          <p style="text-align: center" *ngIf="textOpacity5">
+            Odložite uređaj sve dok ne čujete zvučni signal.
+          </p>
+          <p style="text-align: center" *ngIf="textOpacity5">
+            Kada čujete zvučni signal, kliknite na NEXT STEP i nastavite s
+            ispunjavanjem ankete.
+          </p>
+        </div>
+      </ng-container>
+
+      <ng-container
+        class="boxBreathingContainer"
+        *ngIf="currentStep == 8 && isBoxBreathing"
+      >
+        <div *ngIf="showComponent" class="Bxb">
+          <app-box-breathing></app-box-breathing>
+        </div>
+        <div class="showMessage" *ngIf="showMessage">
+          <div>
+            <div>Uzbuđeni ste? Opustite se.</div>
+            <div class="nastavite">
+              <mat-checkbox
+                [(ngModel)]="complied"
+                (ngModelChange)="valid = complied"
+                >Nastavite
+              </mat-checkbox>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="currentStep == 9 && isBoxBreathing">
+        <div
+          class="padded"
+          style="display: flex; flex-direction: column; align-items: center"
+        >
+          <button
+            class="mat-focus-indicator fullwidth mat-raised-button mat-button-base mat-primary ng-star-inserted"
+            (click)="AudioTimer8()"
+          >
+            NASTAVITE
+          </button>
+
+          <h1 class="thankyou" *ngIf="textOpacity8" style="padding-top: 20px">
+            Hvala na odgovorima!
+          </h1>
+
+          <p style="text-align: center" *ngIf="textOpacity8">
+            Odložite uređaj sve dok ne čujete zvučni signal.
+          </p>
+          <p style="text-align: center" *ngIf="textOpacity8">
+            Kada čujete zvučni signal, kliknite na NEXT STEP i nastavite s
+            ispunjavanjem ankete.
+          </p>
+        </div>
+      </ng-container>
+
+      <!-- prva skupina pitanja -->
+      <ng-container *ngFor="let step of steps; index as i">
+        <div *ngIf="i < steps.length / 2">
+          <ng-container *ngIf="currentStep == i + 2">
+            <ng-container *ngFor="let field of step; index as j">
+              <mat-divider *ngIf="j != 0"></mat-divider>
+              <div style="padding-top: 16px; padding-bottom: 16px">
+                <div class="question-header">
+                  <h3 style="margin-bottom: 0px">
+                    Question #{{ field.number + 1 }}
+                  </h3>
+                  <h3
+                    style="margin-bottom: 0px"
+                    *ngIf="field.required"
+                    [ngClass]="{
+                      required: dirty && field.required && !field.value
+                    }"
+                  >
+                    {{ dirty ? "* Required" : "*" }}
+                  </h3>
+                </div>
+
+                <ng-container *ngIf="field.type == 'text'">
+                  <mat-form-field appearance="outline" class="fullwidth">
+                    <mat-label>{{ field.label }}</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="field.placeholder"
+                      [(ngModel)]="field.value"
+                      required
+                    />
+                    <mat-hint>{{ field.description }}</mat-hint>
+                  </mat-form-field>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'radio'">
+                  <mat-radio-group [(ngModel)]="field.value">
+                    <mat-label>{{ field.label }}</mat-label>
+                    <br />
+                    <mat-radio-button
+                      style="
+                        margin-right: 8px;
+                        margin-top: 8px;
+                        margin-bottom: 8px;
+                      "
+                      [value]="option"
+                      *ngFor="let option of field.options"
+                      >{{ option }}</mat-radio-button
+                    >
+                    <br />
+                    <mat-hint>{{ field.description }}</mat-hint>
+                  </mat-radio-group>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'dropdown'">
+                  <mat-form-field appearance="outline" class="fullwidth">
+                    <mat-label>{{ field.label }}</mat-label>
+                    <mat-select [(ngModel)]="field.value">
+                      <mat-option
+                        *ngFor="let option of field.options"
+                        [value]="option"
+                        >{{ option }}</mat-option
+                      >
+                      <mat-option *ngIf="field.custom" [value]="'other'"
+                        >Other...</mat-option
+                      >
+                    </mat-select>
+                    <mat-hint>{{ field.description }}</mat-hint>
+                  </mat-form-field>
+                  <mat-form-field
+                    appearance="outline"
+                    class="fullwidth"
+                    style="margin-top: 10px"
+                    *ngIf="field.value == 'other'"
+                  >
+                    <mat-label>Other...</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="field.placeholder"
+                      [(ngModel)]="field.customValue"
+                    />
+                  </mat-form-field>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'check'">
+                  <mat-label>{{ field.label }}</mat-label>
+                  <br />
+                  <mat-checkbox [(ngModel)]="field.value">{{
+                    field.placeholder
+                  }}</mat-checkbox>
+                  <br />
+                  <mat-hint>{{ field.description }}</mat-hint>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'textarea'">
+                  <mat-form-field appearance="outline" class="fullwidth">
+                    <mat-label>{{ field.label }}</mat-label>
+                    <textarea
+                      matInput
+                      [(ngModel)]="field.value"
+                      cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="5"
+                      cdkAutosizeMaxRows="10"
+                    ></textarea>
+                    <mat-hint>{{ field.description }}</mat-hint>
+                  </mat-form-field>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'range'">
+                  <mat-label
+                    >{{ field.label }} [0 - {{ field.options.length - 1 }}]:
+                    {{ field.options[field.code] }} </mat-label
+                  ><br />
+                  <mat-slider
+                    style="width: 100%; margin-top: 20px"
+                    [max]="field.options.length - 1"
+                    [min]="0"
+                    [step]="1"
+                    [thumbLabel]="true"
+                    [tickInterval]="1"
+                    [(ngModel)]="field.code"
+                    (ngModelChange)="field.value = field.options[field.code]"
+                    aria-labelledby="example-name-label"
+                  >
+                  </mat-slider>
+                </ng-container>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <!-- druga skupina pitanja -->
+      <ng-container *ngFor="let step of steps; index as i">
+        <div *ngIf="i > 4 && i < 10">
+          <ng-container *ngIf="currentStep == i + 5">
+            <ng-container *ngFor="let field of step; index as j">
+              <mat-divider *ngIf="j != 0"></mat-divider>
+              <div style="padding-top: 16px; padding-bottom: 16px">
+                <div class="question-header">
+                  <h3 style="margin-bottom: 0px">
+                    Question #{{ field.number + 1 }}
+                  </h3>
+                  <h3
+                    style="margin-bottom: 0px"
+                    *ngIf="field.required"
+                    [ngClass]="{
+                      required: dirty && field.required && !field.value
+                    }"
+                  >
+                    {{ dirty ? "* Required" : "*" }}
+                  </h3>
+                </div>
+
+                <ng-container *ngIf="field.type == 'text'">
+                  <mat-form-field appearance="outline" class="fullwidth">
+                    <mat-label>{{ field.label }}</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="field.placeholder"
+                      [(ngModel)]="field.value"
+                      required
+                    />
+                    <mat-hint>{{ field.description }}</mat-hint>
+                  </mat-form-field>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'radio'">
+                  <mat-radio-group [(ngModel)]="field.value">
+                    <mat-label>{{ field.label }}</mat-label>
+                    <br />
+                    <mat-radio-button
+                      style="
+                        margin-right: 8px;
+                        margin-top: 8px;
+                        margin-bottom: 8px;
+                      "
+                      [value]="option"
+                      *ngFor="let option of field.options"
+                      >{{ option }}</mat-radio-button
+                    >
+                    <br />
+                    <mat-hint>{{ field.description }}</mat-hint>
+                  </mat-radio-group>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'dropdown'">
+                  <mat-form-field appearance="outline" class="fullwidth">
+                    <mat-label>{{ field.label }}</mat-label>
+                    <mat-select [(ngModel)]="field.value">
+                      <mat-option
+                        *ngFor="let option of field.options"
+                        [value]="option"
+                        >{{ option }}</mat-option
+                      >
+                      <mat-option *ngIf="field.custom" [value]="'other'"
+                        >Other...</mat-option
+                      >
+                    </mat-select>
+                    <mat-hint>{{ field.description }}</mat-hint>
+                  </mat-form-field>
+                  <mat-form-field
+                    appearance="outline"
+                    class="fullwidth"
+                    style="margin-top: 10px"
+                    *ngIf="field.value == 'other'"
+                  >
+                    <mat-label>Other...</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="field.placeholder"
+                      [(ngModel)]="field.customValue"
+                    />
+                  </mat-form-field>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'check'">
+                  <mat-label>{{ field.label }}</mat-label>
+                  <br />
+                  <mat-checkbox [(ngModel)]="field.value">{{
+                    field.placeholder
+                  }}</mat-checkbox>
+                  <br />
+                  <mat-hint>{{ field.description }}</mat-hint>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'textarea'">
+                  <mat-form-field appearance="outline" class="fullwidth">
+                    <mat-label>{{ field.label }}</mat-label>
+                    <textarea
+                      matInput
+                      [(ngModel)]="field.value"
+                      cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="5"
+                      cdkAutosizeMaxRows="10"
+                    ></textarea>
+                    <mat-hint>{{ field.description }}</mat-hint>
+                  </mat-form-field>
+                </ng-container>
+
+                <ng-container *ngIf="field.type == 'range'">
+                  <mat-label
+                    >{{ field.label }} [0 - {{ field.options.length - 1 }}]:
+                    {{ field.options[field.code] }} </mat-label
+                  ><br />
+                  <mat-slider
+                    style="width: 100%; margin-top: 20px"
+                    [max]="field.options.length - 1"
+                    [min]="0"
+                    [step]="1"
+                    [thumbLabel]="true"
+                    [tickInterval]="1"
+                    [(ngModel)]="field.code"
+                    (ngModelChange)="field.value = field.options[field.code]"
+                    aria-labelledby="example-name-label"
+                  >
+                  </mat-slider>
+                </ng-container>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currentStep == totalSteps">
+        <div class="padded">
+          <h1 class="thankyou">THANK YOU</h1>
+          <p style="text-align: center">Your data has been submitted.</p>
+          <p style="text-align: center">
+            Thank you for participating in this form!
+          </p>
+          <p style="text-align: center">You can now close this tab</p>
+        </div>
+      </ng-container>
+      <mat-divider></mat-divider>
+
+      <!-- <ng-container *ngIf="currentStep < totalSteps">
+        <h3 class="step-counter">Step {{currentStep + 1}} / {{totalSteps}}</h3>
+        <div class="circles">
+          <div class="circle" [ngClass]="{'circle-colored' : 0 <= currentStep}"></div>
+          <div class="circle" [ngClass]="{'circle-colored' : 1 <= currentStep}"></div>
+          <div class="circle" [ngClass]="{'circle-colored' : (i + 2) <= currentStep}"
+            *ngFor="let step of steps; index as i;"></div>
+          <div class="circle" [ngClass]="{'circle-colored' : (totalSteps - 1) <= currentStep}"></div>
+        </div>
+        <button mat-raised-button color="primary" class="fullwidth" (click)="nextStep()" [disabled]="!valid">NEXT
+          STEP</button>
+      </ng-container> -->
+
+      <ng-container *ngIf="currentStep < totalSteps && isBoxBreathing">
+        <h3 class="step-counter">
+          Step {{ currentStep + 1 }} / {{ totalSteps }}
+        </h3>
+        <div class="circles">
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 0 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 1 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 2 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 3 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 4 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 5 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 6 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 7 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 8 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 9 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 10 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 11 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 12 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 13 <= currentStep }"
+          ></div>
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': 14 <= currentStep }"
+          ></div>
+
+          <div
+            class="circle"
+            [ngClass]="{ 'circle-colored': totalSteps - 1 <= currentStep }"
+          ></div>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          class="fullwidth"
+          (click)="nextStep()"
+          [disabled]="!valid"
+        >
+          NEXT STEP
+        </button>
+      </ng-container>
+      <ng-container *ngIf="currentStep == totalSteps">
+        <button
+          mat-raised-button
+          color="primary"
+          class="fullwidth"
+          style="margin-top: 20px"
+          (click)="end()"
+          [disabled]="!valid"
+        >
+          CLOSE
+        </button>
+      </ng-container>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "digident-67bf6": {
+      "hosting": {
+        "digident": [
+          "digident-dev"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "digident-67bf6"
+  }
+}

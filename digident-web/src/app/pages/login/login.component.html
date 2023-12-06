@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="content">
+    <div class="logo"></div>
+    <mat-card class="lente">
+      <div class="lenta"></div>
+      <div class="lenta2"></div>
+    </mat-card>
+    <mat-card class="card">
+      <form [formGroup]="$account.loginForm">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" placeholder="user@email.com" formControlName="email">
+          <mat-error *ngIf="$account.loginForm.get('email')!.errors?.['required']">Enter Email</mat-error>
+          <mat-error *ngIf="$account.loginForm.get('email')!.errors?.['email']">Enter Valid Email</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" placeholder="user@email.com" formControlName="password">
+          <mat-error *ngIf="$account.loginForm.get('password')!.errors?.['required']">Enter Password</mat-error>
+          <mat-error *ngIf="$account.loginForm.get('password')!.errors?.['minlength']">Password too short</mat-error>
+        </mat-form-field>
+        <p>Don't have an account? <a routerLink="/register">Register</a></p>
+        <button mat-raised-button color="primary" class="full-width" [disabled]="$account.loginForm.invalid" (click)="$account.login()">Login</button>
+      </form>
+    </mat-card>
+
+    <!-- <button mat-raised-button color="primary" (click)="doIt()">DO IT</button> -->
+  </div>
+</div>
+
+

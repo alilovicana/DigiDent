@@ -1,0 +1,14 @@
+[forms]
+name - string
+status - enum (editing, open, closed)
+
+[fields]
+order -
+step -
+title - string
+description - string
+placeholder - string
+type - enum (text, number, date, dropdown, range, radio, check, select, biometrics)
+
+
+

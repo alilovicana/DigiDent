@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="content">
+    <div class="logo"></div>
+    <mat-card class="card">
+      <form [formGroup]="$account.registerForm">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" placeholder="user@email.com" formControlName="email">
+          <mat-error *ngIf="$account.registerForm.get('email')!.errors?.['required']">Enter Email</mat-error>
+          <mat-error *ngIf="$account.registerForm.get('email')!.errors?.['email']">Enter Valid Email</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" placeholder="password123" formControlName="password">
+          <mat-error *ngIf="$account.registerForm.get('password')!.errors?.['required']">Enter Password</mat-error>
+          <mat-error *ngIf="$account.registerForm.get('password')!.errors?.['minlength']">Password too short</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm password</mat-label>
+          <input matInput type="password" placeholder="password123" formControlName="confirmPassword">
+          <mat-error *ngIf="$account.registerForm.get('confirmPassword')!.errors?.['required']">Confirm Password</mat-error>
+          <mat-error *ngIf="$account.registerForm.errors?.['notSame']">Passwords don't match</mat-error>
+        </mat-form-field>
+        <p>Already have an account? <a routerLink="/login">Login</a></p>
+        <button mat-raised-button color="primary" class="full-width" [disabled]="$account.registerForm.invalid" (click)="$account.register()">Register</button>
+      </form>
+    </mat-card>
+  </div>
+</div>
+
+

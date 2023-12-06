@@ -1,0 +1,61 @@
+.container {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.content {
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card {
+  text-align: center;
+}
+
+.logo {
+  width: 100%;
+  height: 300px;
+  margin-bottom: 20px;
+  background-image: url('../../../assets/logoAndTitleVertical.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.lente {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.lenta {
+  width: 200px;
+  height: 60px;
+  margin-left: 40px;
+  scale: 1.3;
+  background-image: url('../../../assets/intereg.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  justify-self: center;
+}
+.lenta2 {
+  width: 200px;
+  height: 45px;
+  margin-left: 20px;
+  background-image: url('../../../assets/mefst.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  justify-self: center;
+}

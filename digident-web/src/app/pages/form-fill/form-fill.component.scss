@@ -1,0 +1,154 @@
+.header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0px 5px 10px 10px #00000010;
+}
+
+.logo {
+  width: 143px;
+  height: 34px;
+  background-image: url("../../../assets/logoandtitle.png");
+  background-size: center;
+  background-position: center;
+}
+
+.container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.content {
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  max-height: calc(100vh - 64px);
+  overflow-y: scroll;
+}
+
+.fullwidth {
+  width: 100%;
+}
+
+.circles {
+  padding: 20px;
+  padding-top: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.circle {
+  width: 16px;
+  height: 16px;
+  margin: 8px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.2);
+}
+
+.circle-colored {
+  background-color: #1fc9f2;
+}
+
+.step-counter {
+  text-align: center;
+  margin-bottom: 0px;
+  padding-top: 20px;
+}
+
+.smartwatch-plugin {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  border: 3px solid #1fc9f2;
+  position: relative;
+  padding-top: 74px !important;
+  overflow: hidden;
+}
+
+.smartwatch-plugin-title {
+  color: white;
+  font-weight: 800;
+  font-size: 18px;
+  background-color: #1fc9f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  height: 54px;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+}
+
+.smartwatch-plugin-button {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.smartwatch-plugin-loader {
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.measurement-table {
+  padding-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.measurement {
+  font-weight: 800;
+  color: #1fc9f2;
+  text-align: end;
+}
+
+.padded {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.thankyou {
+  font-weight: 800;
+  color: #1fc9f2;
+  text-align: center;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.required {
+  color: red;
+}
+.showMessage {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 18%;
+  color: #1fc9f2;
+  font-size:x-large;
+}
+.boxBreathingContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.nastavite{
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0.87);
+  font: 400 14px / 20px Roboto;
+  letter-spacing: 0.0179em;
+  padding-top: 20px;
+
+}
